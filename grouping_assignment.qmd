@@ -24,6 +24,10 @@ payments <- readRDS("data/trump_campaign_payments.rds")
 
 A dataset of disbursements (payments and purchases) by the Donald J. Trump for President campaign committee during the 2020 election cycle. The included payments are from 2017 and 2018.
 
+```{r}
+write.csv(payments, "payments.csv", row.names = FALSE)
+```
+
 This data and examples were developed as part of the NYT Open training, which we've adapted from here. Note that the dataset has been alterted for instructional purposes, so doesn't represent the original FEC data in its entirety.
 
 In the environment tab in the upper right, click on the `payments` dataset to open the RStudio viewer to examine the data. You can also run the chunk below as well to bring up a slice of the data.
@@ -61,11 +65,11 @@ Take a moment to look at the various categories included for each disbursement.
 
 Without doing any analysis yet, what are three questions you might try to answer using this dataset? Write your narrative answers in the spaces below.
 
-1.  
+1.  What was the purpose of the largest disbursement in the Trump campaign?
 
-2.  
+2.  Which month saw the largest amount of disbursements for the Trump campaign?
 
-3.  
+3.  Which recipient received the largest amount of total money in disbursements?
 
 ## Coding Assignment Questions
 
@@ -81,6 +85,13 @@ How much was spent in the 2017 vs. 2018 reporting year?
 
 ```{r}
 
+data_grouped <- group_by(data_filtered, disbursement_year)
+
+data_summarized <- summarize(data_grouped, total_spent = sum(disbursement_amount))
+
+# According to the data provided, the total amount of money that was spent in 2017 and 2018 was $17082338 and $37212716.
+
+
 
 
 
@@ -92,8 +103,13 @@ How much was spent in the 2017 vs. 2018 reporting year?
 Tally the total overall disbursement amounts for each month (distinguishing between say, Oct. 2018 v. Oct. 2019). In which month was spending the highest?
 
 ```{r}
+payments <- mutate(payments, month_year = paste(disbursement_month, disbursement_year, sep = "_"))
 
+data_grouped_highestmonth <- group_by(payments, month_year)
 
+data_summarized_highestmonth <- summarize(data_grouped_highestmonth, total_disbursement = sum(disbursement_amount))
+
+#Looking through the date_summarized_highestmonth set, I determined that October of 2018 saw the highest amount of disbursements for the Trump campaign at $9738567.6.
 
 
 
@@ -105,7 +121,11 @@ Which recipient (recipient_name) was paid the most in the 2020 election cycle?
 ```{r}
 
 
+data_grouped_recname <- group_by(payments, recipient_name)
 
+data_summarized_recname <- summarize(data_grouped_recname, total_paid = sum(disbursement_amount))
+
+#Using the data filtered in data_summarized_recname I found that AMERICAN MADE MEDIA CONSULTANTS, LLC was the most paid recipient in disbursements with $9772583.64 in total. 
 
 
 
@@ -116,7 +136,9 @@ Look at what this recipient was paid for. What service or good (see the "disburs
 
 ```{r}
 
+#AMERICAN MADE MEDIA CONSULTANTS, LLC was paid the most for "Placed Media" in October of 2018.
 
+#For this question, I sorted the data from most to least on the payments data tab and looked at the disbursement_description. 
 
 
 
@@ -138,11 +160,10 @@ Who were the 5 biggest recipients of campaign spending on "LEGAL CONSULTING"..?
 
 ```{r}
 
+filter(payments, disbursement_description == "LEGAL CONSULTING")
 
 
-
-
-
+#Using this command I discovered that the 5 biggest recipients of campaign spending on legal consulting were: JONES DAY, LAROCCA HORNIK ROSEN GREENBERG & BLAHA LLP, BELKIN BURDEN WENIG & GOLDMAN LLP, HARDER LLP, 
 
 ```
 
