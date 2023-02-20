@@ -149,8 +149,11 @@ What's the most common category overall (see "disbursement_description") the cam
 
 ```{r}
 
+data_category <- group_by(payments, disbursement_description)
 
+data_counted <- count(data_category)
 
+#Using the commands above, I discovered that Merchant fees was the most common category overall with 1002 instances. 
 
 
 
@@ -163,7 +166,7 @@ Who were the 5 biggest recipients of campaign spending on "LEGAL CONSULTING"..?
 filter(payments, disbursement_description == "LEGAL CONSULTING")
 
 
-#Using this command I discovered that the 5 biggest recipients of campaign spending on legal consulting were: JONES DAY, LAROCCA HORNIK ROSEN GREENBERG & BLAHA LLP, BELKIN BURDEN WENIG & GOLDMAN LLP, HARDER LLP, 
+#Using this command I discovered that the 5 biggest recipients of campaign spending on legal consulting were: JONES DAY, LAROCCA HORNIK ROSEN GREENBERG & BLAHA LLP, BELKIN BURDEN WENIG & GOLDMAN LLP, HARDER LLP, AND THE TRUMP CORPORATION.
 
 ```
 
@@ -171,6 +174,19 @@ filter(payments, disbursement_description == "LEGAL CONSULTING")
 Who are the top 5 individuals (vs. organization) were paid by the campaign committee?
 
 ```{r}
+data_ind <- filter(payments, entity_type == "IND")
+
+data_grouped_ind <- group_by(data_ind, payee_last_name, payee_first_name, payee_middle_name)
+
+data_summarized_ind <- summarize(data_grouped_ind, total_disbursement = sum(disbursement_amount))
+
+data_ordered_ind <- arrange(data_summarized_ind, desc(total_disbursement))
+
+top_5_individuals <- head(data_ordered_ind, 5)
+
+#GLASSNER MICHAEL 511280.0, DOLLMAN SEAN 389541.1, CENTINELLO DARREN 214934.2, CARR CHRISTOPHER 160000.0, PENCE JOHN 104244.0
+
+#First, I grouped the data by first, middle and last name. Then, I summarized that data using the sum of the total amount of disbursements that were received through the trump campaign. Then I ordered that data using the arrange command in descending orde in data_oredered_ind. Finally, I created a new data set where I filtered the top 5 individuals with the head command. 
 
 
 
@@ -186,7 +202,7 @@ For the indvidual who was paid the most, which payment category (disbursement_de
 ```{r}
 
 
-
+#For this question, I looked through the dataset to see which category was the most paid and I discovered that it was PAYROLL.
 
 
 
